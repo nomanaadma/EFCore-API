@@ -18,6 +18,6 @@ public class GenreMapping : IEntityTypeConfiguration<Genre>
 		
 		//.HasDefaultValue("getdate()");
 		
-		builder.HasData(new Genre { Id = 1, Name = "Drama" });
+		// builder.HasData(new Genre { Id = 1, Name = "Drama" });
 	}
 }
