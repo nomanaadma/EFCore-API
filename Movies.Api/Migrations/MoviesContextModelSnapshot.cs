@@ -54,6 +54,9 @@ namespace Movies.Api.Migrations
                     b.Property<int>("AgeRating")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("InternetRating")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("MainGenreId")
                         .HasColumnType("int");
 

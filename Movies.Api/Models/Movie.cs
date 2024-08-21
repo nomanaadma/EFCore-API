@@ -5,6 +5,8 @@ public class Movie
     public int Identifier { get; init; }
     public string? Title { get; set; }
     public DateTime ReleaseDate { get; set; }
+    
+    public decimal InternetRating { get; set; }
     public string? Synopsis { get; set; }
     public AgeRating AgeRating { get; set; }
     
