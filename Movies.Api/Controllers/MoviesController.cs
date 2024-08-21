@@ -28,11 +28,27 @@ public class MoviesController(MoviesContext context) : Controller
         // Similar to FirstOrDefault, but throws if more than one match is found.
         // var movie = await _context.Movies.SingleOrDefaultAsync(m => m.Id == id);
         // Serves match from memory if already fetched, otherwise queries DB.
-        var movie = await _context.Movies.FindAsync(id);
+        // var movie = await _context.Movies.FindAsync(id);
+        
+        var movie = await _context.Movies
+            .Include(movie => movie.Genre)
+            .SingleOrDefaultAsync(m => m.Identifier == id);
         
         return movie == null
             ? NotFound()
             : Ok(movie);
+    }
+    
+    [HttpGet("until-age/{ageRating}")]
+    [ProducesResponseType(typeof(List<MovieTitle>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAllUntilAge([FromRoute] AgeRating ageRating)
+    {
+        var filteredTitles = await _context.Movies
+            .Where(movie => movie.AgeRating <= ageRating)
+            .Select(movie => new MovieTitle { Id = movie.Identifier, Title = movie.Title})
+            .ToListAsync();
+
+        return Ok(filteredTitles);
     }
     
     [HttpGet("by-year/{year:int}")]
