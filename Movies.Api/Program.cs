@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Movies.Api.Data;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,29 +11,40 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 	options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());	
 });
 
+var serilog = new LoggerConfiguration()
+	.ReadFrom.Configuration(builder.Configuration)
+	.CreateLogger();
+
+builder.Services.AddSerilog(serilog);
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<MoviesContext>();
+builder.Services.AddDbContext<MoviesContext>(optionBuilder =>
+{
+	var connectionString = builder.Configuration.GetConnectionString("MoviesContext");
+	optionBuilder
+		.UseSqlServer(connectionString);
+
+}, ServiceLifetime.Scoped, ServiceLifetime.Singleton);
 
 var app = builder.Build();
 
 
 // Temporary solution, need to fix later
-var scope = app.Services.CreateScope();
-var context = scope.ServiceProvider.GetRequiredService<MoviesContext>();
+using (var scope = app.Services.CreateScope())
+{
+	var context = scope.ServiceProvider.GetRequiredService<MoviesContext>();
+	var pendingMigration = await context.Database.GetPendingMigrationsAsync();
+	if (pendingMigration.Any())
+		throw new Exception("Database is not fully migrated for MoviesContext");
+};
 
-var pendingMigration = await context.Database.GetPendingMigrationsAsync();
-
-if (pendingMigration.Any())
-	throw new Exception("Database is not fully migrated for MoviesContext");
 
 // await context.Database.MigrateAsync();
 // context.Database.EnsureDeleted();
 // context.Database.EnsureCreated();
-
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
