@@ -73,6 +73,7 @@ public class CinemaMovieMapping : IEntityTypeConfiguration<CinemaMovie>
 {
 	public void Configure(EntityTypeBuilder<CinemaMovie> builder)
 	{
+		builder.ToTable("CinemaMovie");
 	}
 }
 
@@ -80,5 +81,6 @@ public class TelevisionMovieMapping : IEntityTypeConfiguration<TelevisionMovie>
 {
 	public void Configure(EntityTypeBuilder<TelevisionMovie> builder)
 	{
+		builder.ToTable("TelevisionMovie");
 	}
 }
