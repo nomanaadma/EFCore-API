@@ -17,7 +17,13 @@ public class GenreMapping : IEntityTypeConfiguration<Genre>
 			.HasValueGenerator<CreatedDateGenerator>();
 		
 		//.HasDefaultValue("getdate()");
-		
+
+		builder.Property(g => g.Name)
+			.HasMaxLength(256)
+			.HasColumnType("varchar");
+
+		builder.HasAlternateKey(g => g.Name);
+
 		// builder.HasData(new Genre { Id = 1, Name = "Drama" });
 	}
 }

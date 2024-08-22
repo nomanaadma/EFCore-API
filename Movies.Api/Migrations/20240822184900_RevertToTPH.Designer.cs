@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Movies.Api.Data;
 
@@ -11,9 +12,11 @@ using Movies.Api.Data;
 namespace Movies.Api.Migrations
 {
     [DbContext(typeof(MoviesContext))]
-    partial class MoviesContextModelSnapshot : ModelSnapshot
+    [Migration("20240822184900_RevertToTPH")]
+    partial class RevertToTPH
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,8 +39,7 @@ namespace Movies.Api.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -63,10 +65,8 @@ namespace Movies.Api.Migrations
                     b.Property<decimal>("InternetRating")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("MainGenreName")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar");
+                    b.Property<int>("MainGenreId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ReleaseDate")
                         .IsRequired()
@@ -83,7 +83,7 @@ namespace Movies.Api.Migrations
 
                     b.HasKey("Identifier");
 
-                    b.HasIndex("MainGenreName");
+                    b.HasIndex("MainGenreId");
 
                     b.ToTable("Pictures", (string)null);
 
@@ -117,8 +117,7 @@ namespace Movies.Api.Migrations
                 {
                     b.HasOne("Movies.Api.Models.Genre", "Genre")
                         .WithMany("Movies")
-                        .HasForeignKey("MainGenreName")
-                        .HasPrincipalKey("Name")
+                        .HasForeignKey("MainGenreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

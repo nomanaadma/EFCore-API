@@ -11,8 +11,8 @@ public class MovieMapping : IEntityTypeConfiguration<Movie>
 	public void Configure(EntityTypeBuilder<Movie> builder)
 	{
 		builder
-			// .ToTable("Pictures")
-			.UseTpcMappingStrategy()
+			.ToTable("Pictures")
+			// .UseTphMappingStrategy()
 			.HasQueryFilter(movie => movie.ReleaseDate >= new DateTime(2000, 1, 1))
 			.HasKey(movie => movie.Identifier);
 	
@@ -40,11 +40,15 @@ public class MovieMapping : IEntityTypeConfiguration<Movie>
 			.HasColumnType("varchar(max)")
 			.HasColumnName("Plot");
 
+		builder.Property(movie => movie.MainGenreName)
+			.HasMaxLength(256)
+			.HasColumnType("varchar");
+		
 		builder
 			.HasOne(movie => movie.Genre)
 			.WithMany(genre => genre.Movies)
-			.HasPrincipalKey(genre => genre.Id)
-			.HasForeignKey(movie => movie.MainGenreId);
+			.HasPrincipalKey(genre => genre.Name)
+			.HasForeignKey(movie => movie.MainGenreName);
 		
 		// Seed
 		// builder.HasData(new Movie
