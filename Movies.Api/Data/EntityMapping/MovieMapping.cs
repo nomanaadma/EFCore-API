@@ -29,11 +29,11 @@ public class MovieMapping : IEntityTypeConfiguration<Movie>
 		
 		// builder.ComplexProperty(movie => movie.Director);
 		
-		builder.OwnsOne(movie => movie.Director)
-			.ToTable("Movie_Directors");
-		
-		builder.OwnsMany(movie => movie.Actors)
-			.ToTable("Movie_Actors");
+		// builder.OwnsOne(movie => movie.Director)
+		// 	.ToTable("Movie_Directors");
+		//
+		// builder.OwnsMany(movie => movie.Actors)
+		// 	.ToTable("Movie_Actors");
 	
 		builder.Property(movie => movie.Synopsis)
 			.HasColumnType("varchar(max)")
@@ -66,5 +66,19 @@ public class MovieMapping : IEntityTypeConfiguration<Movie>
 		// 		new { MovieIdentifier = 1, Id = 2, FirstName = "brad", LastName = "Pit" }
 		// 	);
 		
+	}
+}
+
+public class CinemaMovieMapping : IEntityTypeConfiguration<CinemaMovie>
+{
+	public void Configure(EntityTypeBuilder<CinemaMovie> builder)
+	{
+	}
+}
+
+public class TelevisionMovieMapping : IEntityTypeConfiguration<TelevisionMovie>
+{
+	public void Configure(EntityTypeBuilder<TelevisionMovie> builder)
+	{
 	}
 }
