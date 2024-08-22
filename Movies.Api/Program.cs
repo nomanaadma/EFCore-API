@@ -1,9 +1,15 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Movies.Api.Data;
+using Movies.Api.Repositories;
+using Movies.Api.Services;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddTransient<IGenreRepository, GenreRepository>();
+builder.Services.AddTransient<IBatchGenreService, BatchGenreService>();
+builder.Services.AddScoped<IUnitOfWorkManager, UnitOfWorkManager>();
 
 // Add services to the container.
 builder.Services.AddControllers().AddJsonOptions(options =>

@@ -1,21 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Movies.Api.Data;
 using Movies.Api.Models;
+using Movies.Api.Repositories;
+using Movies.Api.Services;
 
 namespace Movies.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class GenresController(MoviesContext context) : Controller
+public class GenresController(IGenreRepository repository, IBatchGenreService batchService)
+    : Controller
 {
-    private readonly MoviesContext _context = context;
-
     [HttpGet]
-    [ProducesResponseType(typeof(List<Genre>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IEnumerable<Genre>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll()
     {
-        return Ok(await _context.Genres.ToListAsync());
+        return Ok(await repository.GetAll());
     }
 
     [HttpGet("{id:int}")]
@@ -23,7 +22,7 @@ public class GenresController(MoviesContext context) : Controller
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Get([FromRoute] int id)
     {
-        var genre = await _context.Genres.FindAsync(id);
+        var genre = await repository.Get(id);
         
         return genre == null
             ? NotFound()
@@ -34,11 +33,18 @@ public class GenresController(MoviesContext context) : Controller
     [ProducesResponseType(typeof(Genre), StatusCodes.Status201Created)]
     public async Task<IActionResult> Create([FromBody] Genre genre)
     {
-        await _context.Genres.AddAsync(genre);
-        
-        await _context.SaveChangesAsync();
+        var createdGenre = await repository.Create(genre);
 
-        return CreatedAtAction(nameof(Get), new { id = genre.Id }, genre);
+        return CreatedAtAction(nameof(Get), new { id = createdGenre.Id }, createdGenre);
+    }
+    
+    [HttpPost("batch")]
+    [ProducesResponseType(typeof(IEnumerable<Genre>), StatusCodes.Status201Created)]
+    public async Task<IActionResult> CreateAll([FromBody] List<Genre> genres)
+    {
+        var response = await batchService.CreateGenres(genres);
+
+        return CreatedAtAction(nameof(GetAll), new{}, response);
     }
     
     [HttpPut("{id:int}")]
@@ -46,16 +52,11 @@ public class GenresController(MoviesContext context) : Controller
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] Genre genre)
     {
-        var existingGenre = await _context.Genres.FindAsync(id);
+        var updatedGenre = await repository.Update(id, genre);
 
-        if (existingGenre is null)
-            return NotFound();
-
-        existingGenre.Name = genre.Name;
-
-        await _context.SaveChangesAsync();
-
-        return Ok(existingGenre);
+        return updatedGenre is null
+            ? NotFound()
+            :Ok(updatedGenre);
     }
     
     [HttpDelete("{id:int}")]
@@ -63,15 +64,8 @@ public class GenresController(MoviesContext context) : Controller
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Remove([FromRoute] int id)
     {
-        var existingGenre = await _context.Genres.FindAsync(id);
-
-        if (existingGenre is null)
-            return NotFound();
-
-        _context.Genres.Remove(existingGenre);
-
-        await _context.SaveChangesAsync();
-
-        return Ok();
+        var success = await repository.Delete(id);
+        
+        return success ? Ok() : NotFound();
     }
 }
