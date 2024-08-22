@@ -11,7 +11,8 @@ public class MovieMapping : IEntityTypeConfiguration<Movie>
 	public void Configure(EntityTypeBuilder<Movie> builder)
 	{
 		builder
-			.ToTable("Pictures")
+			// .ToTable("Pictures")
+			.UseTpcMappingStrategy()
 			.HasQueryFilter(movie => movie.ReleaseDate >= new DateTime(2000, 1, 1))
 			.HasKey(movie => movie.Identifier);
 	
@@ -73,7 +74,7 @@ public class CinemaMovieMapping : IEntityTypeConfiguration<CinemaMovie>
 {
 	public void Configure(EntityTypeBuilder<CinemaMovie> builder)
 	{
-		builder.ToTable("CinemaMovie");
+		// builder.ToTable("CinemaMovie");
 	}
 }
 
@@ -81,6 +82,6 @@ public class TelevisionMovieMapping : IEntityTypeConfiguration<TelevisionMovie>
 {
 	public void Configure(EntityTypeBuilder<TelevisionMovie> builder)
 	{
-		builder.ToTable("TelevisionMovie");
+		// builder.ToTable("TelevisionMovie");
 	}
 }
