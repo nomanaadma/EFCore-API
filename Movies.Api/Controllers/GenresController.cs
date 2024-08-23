@@ -82,4 +82,14 @@ public class GenresController(IGenreRepository repository, IBatchGenreService ba
         
         return success ? Ok() : NotFound();
     }
+    
+    [HttpPut("batch-update")]
+    [ProducesResponseType(typeof(IEnumerable<Genre>), StatusCodes.Status201Created)]
+    public async Task<IActionResult> UpdateAll([FromBody] List<Genre> genres)
+    {
+        var response = await batchService.UpdateGenres(genres);
+
+        return CreatedAtAction(nameof(GetAll), new{}, response);
+    }
+    
 }
