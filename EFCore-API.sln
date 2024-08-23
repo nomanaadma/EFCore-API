@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tenants.QueryFilter", "Tena
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MariaDB", "MariaDB\MariaDB.csproj", "{583302B0-55CD-4941-9615-A733F734BAFB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosmos", "Cosmos\Cosmos.csproj", "{EAA9C351-C577-4BB4-BED4-9B3B63E4A5ED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{583302B0-55CD-4941-9615-A733F734BAFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{583302B0-55CD-4941-9615-A733F734BAFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{583302B0-55CD-4941-9615-A733F734BAFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAA9C351-C577-4BB4-BED4-9B3B63E4A5ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAA9C351-C577-4BB4-BED4-9B3B63E4A5ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAA9C351-C577-4BB4-BED4-9B3B63E4A5ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAA9C351-C577-4BB4-BED4-9B3B63E4A5ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
