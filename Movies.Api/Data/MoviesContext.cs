@@ -17,6 +17,7 @@ public class MoviesContext(DbContextOptions<MoviesContext> options) : DbContext(
 		modelBuilder.ApplyConfiguration( new CinemaMovieMapping() );
 		modelBuilder.ApplyConfiguration( new TelevisionMovieMapping() );
 		modelBuilder.ApplyConfiguration( new ExternalInformationMapping() );
+		modelBuilder.ApplyConfiguration( new ActorMapping() );
 	}
 }
 
