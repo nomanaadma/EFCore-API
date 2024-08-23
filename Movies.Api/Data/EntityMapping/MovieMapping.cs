@@ -15,6 +15,8 @@ public class MovieMapping : IEntityTypeConfiguration<Movie>
 			// .UseTphMappingStrategy()
 			.HasQueryFilter(movie => movie.ReleaseDate >= new DateTime(2000, 1, 1))
 			.HasKey(movie => movie.Identifier);
+
+		builder.HasAlternateKey(movie => new { movie.Title, movie.ReleaseDate });
 	
 		builder.Property(movie => movie.Title)
 			.HasColumnType("varchar")

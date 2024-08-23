@@ -11,6 +11,8 @@ public interface IGenreRepository
     Task<Genre> Create(Genre genre);
     Task<Genre?> Update(int id, Genre genre);
     Task<bool> Delete(int id);
+    Task<IEnumerable<Genre>> GetAllFromQuery();
+    Task<IEnumerable<GenreName>> GetNames();
 }
 
 public class GenreRepository: IGenreRepository
@@ -73,4 +75,28 @@ public class GenreRepository: IGenreRepository
 
         return true;
     }
+
+    public async Task<IEnumerable<Genre>> GetAllFromQuery()
+    {
+        const int minimumId = 2;
+
+        var genres = await _context.Genres
+            .FromSql($"SELECT * FROM [dbo].[genres] WHERE ID >= {minimumId}")
+            .Where(genre => genre.Name != "Comedy")
+            .ToListAsync();
+
+        return genres;
+
+    }
+    
+    public async Task<IEnumerable<GenreName>> GetNames()
+    {
+        var names = await _context.Database
+            .SqlQuery<GenreName>($@"SELECT Name FROM dbo.Genres")
+            .ToListAsync();
+
+        return names;
+    }
+    
+    
 }
