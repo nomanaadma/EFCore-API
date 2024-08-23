@@ -22,6 +22,9 @@ public class GenreMapping : IEntityTypeConfiguration<Genre>
 			.HasMaxLength(256)
 			.HasColumnType("varchar");
 
+		builder.Property(g => g.ConcurrencyToken)
+			.IsRowVersion();
+
 		builder
 			.Property<bool>("Deleted")
 			.HasDefaultValue(false);

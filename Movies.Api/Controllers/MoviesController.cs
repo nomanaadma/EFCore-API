@@ -15,7 +15,31 @@ public class MoviesController(MoviesContext context) : Controller
     [ProducesResponseType(typeof(List<Movie>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll()
     {
-        return Ok(await _context.Movies.ToListAsync());
+        // var movies = await _context.Movies
+            // .Include(movie => movie.Actors)
+            // .ToListAsync();
+
+        // var movies = await _context.Movies.ToListAsync();
+
+        // foreach (var televisionMovie in movies.OfType<TelevisionMovie>())
+        // {
+        //     await _context.Entry(televisionMovie)
+        //         .Collection(movie => movie.Actors)
+        //         .LoadAsync();
+        // }
+        
+        // with single database records use asnotracking
+        var movies = await _context.Movies
+            .AsNoTracking()
+            .ToListAsync();
+        
+        // when include use identity resolution
+        // var movies2 = await _context.Movies
+        //     .AsNoTrackingWithIdentityResolution()
+        //     .Include(movie => movie.Actors)
+        //     .ToListAsync();
+            
+        return Ok(movies);
     }
 
     [HttpGet("{id:int}")]
